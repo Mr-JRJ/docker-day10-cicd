@@ -1,0 +1,22 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t my-node-app .
+
+      - name: Run container test
+        run: |
+          docker run -d -p 3000:3000 --name test-container my-node-app
+          sleep 5
+          curl http://localhost:3000
+          docker stop test-container
